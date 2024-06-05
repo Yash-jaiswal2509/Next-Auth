@@ -7,6 +7,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const login = async (values: zod.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -20,14 +21,18 @@ export const login = async (values: zod.infer<typeof LoginSchema>) => {
   const exisitingUser = await getUserByEmail(email);
 
   if (!exisitingUser || !exisitingUser.email || !exisitingUser.password) {
+    //not avalaibilty of password means they should use OAuth
     return { error: "Email does not exist" };
   }
 
   if (!exisitingUser.emailVerified) {
-    const verficationToKen = await generateVerificationToken(
+    const verificationToken = await generateVerificationToken(
       exisitingUser.email,
     );
-
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token,
+    );
     return { success: "Confirmation Email Sent!" };
   }
 
