@@ -14,7 +14,6 @@ export const reset = async (values: zod.infer<typeof ResetSchema>) => {
   }
 
   const { email } = validatedFields.data;
-
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser) {
@@ -24,7 +23,10 @@ export const reset = async (values: zod.infer<typeof ResetSchema>) => {
   const passwordResetToken = await generateResetToken(email);
 
   // send email to user with reset link
-  await sendPasswordResetEmail(email, passwordResetToken.token);
+  await sendPasswordResetEmail(
+    passwordResetToken.email,
+    passwordResetToken.token,
+  );
 
   return { success: "Reset password email sent!" };
 };
