@@ -23,3 +23,12 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     html: `<a href="${confirmLink}">Click here to verify your email</a>`,
   });
 };
+
+export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
+  await resend.emails.send({
+    from: "onborading@resend.dev",
+    to: email,
+    subject: "2FA Code",
+    html: `<p>Your Two Facotr Code: ${token}</p>`,
+  });
+};
