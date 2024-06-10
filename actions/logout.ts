@@ -7,4 +7,5 @@ export const logout = async () => {
   // like logging out from other services
   // deleting user etc
   await signOut();
+  location.reload();
 };
