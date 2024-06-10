@@ -52,6 +52,7 @@ export const {
 
       return true;
     },
+
     async session({ token, session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -70,6 +71,7 @@ export const {
       }
       return session;
     },
+    
     async jwt({ token }) {
       if (!token.sub) return token;
 
